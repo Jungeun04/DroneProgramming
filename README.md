@@ -10,5 +10,5 @@
 ## 하드웨어 스펙
 - STM32F405
 - BNO080 gyrosensor
-- 20602
-- baro
+- ICM-20602
+- LPS22HH
