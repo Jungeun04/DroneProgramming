@@ -1,5 +1,8 @@
 # 센서인터페이스
 
+Attitude, Heading : BNO080, ICM-20602
+Altitude : LPS22HH  
+
 ## BNO080
 - 3축 자이로, 3축 가속도, 3축 자기장
 - 내장 컨트롤러 M0+
@@ -70,4 +73,40 @@
 
 ## LPS22HH
 
-email test
+- 기압고도센서(온도센서 포함)
+- 동작범위(압력): 260hPa ~ 1260hPa (24bit)
+- 동작범위(온도): -40°C ~ 80°C (16bit)
+- 1Hz ~ 200Hz ODR(Pressure Output Data Rate)
+- I2C, SPI, MIPI I3C 인터페이스
+
+
+### **PORT, PIN 설정**
+
+**SPI3**
+- MISO: (PORTB, 4) -> SPI3_MISO
+- MOSI: (PORTB, 5) -> SPI3_MOSI
+- CS: (PORTB, 6) -> GPIO_Output
+- SCK: (PORTB, 3) -> SPI3_SCK
+  
+**통신 제어**
+- INT: (PORTB, 7) - GPIO_Input
+
+### **SPI3 설정**
+- Mode: Full-Duplex Master
+- NSS Signal: Software control
+
+- Data Size: 8bit
+- Prescaler: 4(42Mhz/4 = 10.5MHz >= Max 10MHz)
+- Clock Polarity(CPOL): High
+- Clock Phase(CPHA):Rising Edge (2 Edge)
+- First bit: MSB First
+
+### **Driver**
+- [링크](https://github.com/ChrisWonyeobPark/LPS22HH-STM32F4-SPI-LL-Driver)  
+
+### IIR(Infinity Impulse Response)
+- 결과가 input에 의해서만 관계식이 나타내어 지는 것이 아니라 이전의 결과도 영향을 주는 방정식
+- Initial Rest Condition이 필요함  
+$$y[n]=\sum_{l=0}^{N}{a_l y[n-l]}+\sum_{k=0}^{M}{b_k x[n-k]}$$
+- x: input signal
+- y: result 
