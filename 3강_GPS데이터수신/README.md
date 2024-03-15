@@ -10,10 +10,16 @@
 - RX: (PORTC, 10) -> UART4_TX
 - TX: (PORTC, 11) -> UART4_RX
 
-### **UART 설정**
+### **UART4 설정**
 - Mode: Asynchronous
 - Word Length: 8 Bits
 - Baud Rate: 9600bps
 - Parity: None
 - Stop bits: 1
 - Interrupt: RXNE interrupt(수신인터럽트 사용)
+
+### UBX 프로토콜로 변경
+
+- 데이터가 문자가 아닌 바이너리 형태
+- Ublox 자체 프로토콜
+- 0xB5 0x62로 시작
