@@ -7,8 +7,17 @@
 - LL_Driver
 - HAL_Driver
 
-## 하드웨어 스펙
+## FC 스펙
 - STM32F405
 - BNO080 gyrosensor
 - ICM-20602
 - LPS22HH
+
+## 주변기기
+- FS-IA6B
+- Telemetry * 2
+- UBX M8N (GPS)
+- ESC x 4
+- BLDC Motors x 4
+- TX16s
+- 3-cell LiPo Battery
