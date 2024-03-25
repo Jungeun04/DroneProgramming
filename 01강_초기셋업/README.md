@@ -6,9 +6,9 @@
     - High Speed Clock(HSE): Crystal/Ceramic Resonator
 
 ## Clock Configuration
-    - Input Frequency: 8
-    - PPL Source Mux: HSE
-    - HCLK:168
+- Input Frequency: 8
+- PPL Source Mux: HSE
+- HCLK:168
 
 ## Pinout
 - LED1:PC0 -> GPIO_Output
