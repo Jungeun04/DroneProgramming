@@ -18,13 +18,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bno080.h"
+#include "quaternion.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,7 +69,8 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	float q[4];
+	float quartRadianAccuracy;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -90,6 +93,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   MX_USART6_UART_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   LL_TIM_EnableCounter(TIM3);
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -104,36 +108,51 @@ int main(void)
   LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
 
   LL_USART_EnableIT_RXNE(USART6);
+
+  BNO080_GPIO_SPI_Initialization();  // SPI2 Init
+  BNO080_enableRotationVector(2500); // 400Hz
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-	  /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
 	  // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 );
 	  // LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
 	  // LL_USART_TransmitData8(USART6, 'A');
 	  // HAL_Delay(1000);
-	  if(uart6_rx_flag == 1)
+//	  if(uart6_rx_flag == 1)
+//	  {
+//		  uart6_rx_flag = 0;
+//		  LL_USART_TransmitData8(USART6, uart6_rx_data);
+//
+//		  switch(uart6_rx_data)
+//		  {
+//		  case '0':
+//			  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
+//			  break;
+//		  case '1':
+//			  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+//			  break;
+//		  case '2':
+//			  LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+//			  break;
+//		  }
+//	  }
+	  if(BNO080_dataAvailable())
 	  {
-		  uart6_rx_flag = 0;
-		  LL_USART_TransmitData8(USART6, uart6_rx_data);
+		  q[0] = BNO080_getQuatI();
+		  q[1] = BNO080_getQuatJ();
+		  q[2] = BNO080_getQuatK();
+		  q[3] = BNO080_getQuatReal();
+		  quartRadianAccuracy = BNO080_getQuatRadianAccuracy();
 
-		  switch(uart6_rx_data)
-		  {
-		  case '0':
-			  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
-			  break;
-		  case '1':
-			  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
-			  break;
-		  case '2':
-			  LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
-			  break;
-		  }
+		  Quaternion_Update(&q[0]);
+
+		  printf("%d,%d,%d\n", (int)(BNO080_Roll * 100), (int)(BNO080_Pitch * 100), (int)(BNO080_Yaw * 100));
 	  }
   }
   /* USER CODE END 3 */

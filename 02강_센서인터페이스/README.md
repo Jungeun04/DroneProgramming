@@ -3,6 +3,8 @@
 Attitude, Heading : BNO080, ICM-20602
 Altitude : LPS22HH  
 
+# 2-1. BNO080 9축(자이로, 가속도, 자기장) 센서 인터페이스 (SPI)
+
 ## BNO080
 - 3축 자이로, 3축 가속도, 3축 자기장
 - 내장 컨트롤러 M0+
@@ -22,18 +24,23 @@ Altitude : LPS22HH
 - RST: (PORTC, 9) - GPIO_Output
 - INT: (PORTC, 8) - GPIO_Input
 
+### SPI2 설정
+- Connectivity
+    - Mode: Full-Duplex Master
+    - NSS Signal: Disalbe (Software control)
+
+    - Data Size: 8bit
+    - Prescaler: 16 (42MHz/16 = 2.625MHz < MAX 3MHz)
+    - Clock Polarity(CPOL): High
+    - Clock Phase(CPHA): 2 Edge
+    - First bit: MSB First
+
+### Project Manager
+- Advanced Setting
+    - SPI: LL
+
 ### **Driver**
 - [링크](https://github.com/ChrisWonyeobPark/BNO080-STM32F4-SPI-LL-Driver)
-
-### SPI2 설정
-- Mode: Full-Duplex Master
-- NSS Signal: Software control
-
-- Data Size: 8bit
-- Prescaler: 16 (42MHz/16 = 2.625MHz < MAX 3MHz)
-- Clock Polarity(CPOL): High
-- Clock Phase(CPHA): 2 Edge
-- First bit: MSB First
 
 ---
 
