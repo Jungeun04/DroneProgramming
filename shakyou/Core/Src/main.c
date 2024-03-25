@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -44,7 +45,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+extern uint8_t uart6_rx_data;
+extern uint8_t uart6_rx_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,6 +89,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM3_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   LL_TIM_EnableCounter(TIM3);
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -99,18 +102,39 @@ int main(void)
   HAL_Delay(100);
 
   LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+
+  LL_USART_EnableIT_RXNE(USART6);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	  /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+	  /* USER CODE BEGIN 3 */
 	  // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 );
-	  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
-	  HAL_Delay(1000);
+	  // LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
+	  // LL_USART_TransmitData8(USART6, 'A');
+	  // HAL_Delay(1000);
+	  if(uart6_rx_flag == 1)
+	  {
+		  uart6_rx_flag = 0;
+		  LL_USART_TransmitData8(USART6, uart6_rx_data);
+
+		  switch(uart6_rx_data)
+		  {
+		  case '0':
+			  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
+			  break;
+		  case '1':
+			  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+			  break;
+		  case '2':
+			  LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+			  break;
+		  }
+	  }
   }
   /* USER CODE END 3 */
 }
