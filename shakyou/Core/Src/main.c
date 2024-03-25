@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -85,8 +86,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  LL_TIM_EnableCounter(TIM3);
+  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
 
+  TIM3->PSC = 2000; // 2kHz
+  HAL_Delay(100);
+  TIM3->PSC = 1500; // 3kHz
+  HAL_Delay(100);
+  TIM3->PSC = 1000; // 4kHz
+  HAL_Delay(100);
+
+  LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -97,7 +109,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 );
-	  LL_GPIO_TogglePin(GPIOC, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 );
+	  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
 	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
