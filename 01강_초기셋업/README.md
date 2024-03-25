@@ -40,8 +40,8 @@
 - Buzzer: PB1 -> TIM3_CH4
 
 ## Project Manager
-    - Advanced Setting
-        - TIM: LL
+- Advanced Setting
+    - TIM: LL
 
 작동시 카운터와 채널을 활성화 해주어야 함
 ```C
