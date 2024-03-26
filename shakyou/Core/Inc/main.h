@@ -76,6 +76,14 @@ void Error_Handler(void);
 #define LED2_GPIO_Port GPIOC
 #define LED3_Pin LL_GPIO_PIN_2
 #define LED3_GPIO_Port GPIOC
+#define SPI1_20602_MISO_Pin LL_GPIO_PIN_6
+#define SPI1_20602_MISO_GPIO_Port GPIOA
+#define SPI1_20602_MOSI_Pin LL_GPIO_PIN_7
+#define SPI1_20602_MOSI_GPIO_Port GPIOA
+#define SPI1_20602_CS_Pin LL_GPIO_PIN_4
+#define SPI1_20602_CS_GPIO_Port GPIOC
+#define ICM20602_Interrupt_Pin LL_GPIO_PIN_5
+#define ICM20602_Interrupt_GPIO_Port GPIOC
 #define Buzzer_Pin LL_GPIO_PIN_1
 #define Buzzer_GPIO_Port GPIOB
 #define BNO080_CS_Pin LL_GPIO_PIN_12

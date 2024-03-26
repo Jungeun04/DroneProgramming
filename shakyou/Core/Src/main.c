@@ -27,6 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "bno080.h"
 #include "quaternion.h"
+
+#include "ICM20602.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +96,7 @@ int main(void)
   MX_TIM3_Init();
   MX_USART6_UART_Init();
   MX_SPI2_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   LL_TIM_EnableCounter(TIM3);
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -111,6 +114,8 @@ int main(void)
 
   BNO080_GPIO_SPI_Initialization();  // SPI2 Init
   BNO080_enableRotationVector(2500); // 400Hz
+
+  ICM20602_GPIO_SPI_Initialization();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -120,39 +125,25 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 );
-	  // LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
-	  // LL_USART_TransmitData8(USART6, 'A');
-	  // HAL_Delay(1000);
-//	  if(uart6_rx_flag == 1)
+//	  if(BNO080_dataAvailable())
 //	  {
-//		  uart6_rx_flag = 0;
-//		  LL_USART_TransmitData8(USART6, uart6_rx_data);
+//		  q[0] = BNO080_getQuatI();
+//		  q[1] = BNO080_getQuatJ();
+//		  q[2] = BNO080_getQuatK();
+//		  q[3] = BNO080_getQuatReal();
+//		  quartRadianAccuracy = BNO080_getQuatRadianAccuracy();
 //
-//		  switch(uart6_rx_data)
-//		  {
-//		  case '0':
-//			  LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 );
-//			  break;
-//		  case '1':
-//			  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
-//			  break;
-//		  case '2':
-//			  LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
-//			  break;
-//		  }
+//		  Quaternion_Update(&q[0]);
+//
+//		  printf("%d,%d,%d\n", (int)(BNO080_Roll * 100), (int)(BNO080_Pitch * 100), (int)(BNO080_Yaw * 100));
 //	  }
-	  if(BNO080_dataAvailable())
+	  if(ICM20602_DataReady())
 	  {
-		  q[0] = BNO080_getQuatI();
-		  q[1] = BNO080_getQuatJ();
-		  q[2] = BNO080_getQuatK();
-		  q[3] = BNO080_getQuatReal();
-		  quartRadianAccuracy = BNO080_getQuatRadianAccuracy();
+		  ICM20602_Get3AxisGyroRawData(&ICM20602.gyro_x_raw);
 
-		  Quaternion_Update(&q[0]);
-
-		  printf("%d,%d,%d\n", (int)(BNO080_Roll * 100), (int)(BNO080_Pitch * 100), (int)(BNO080_Yaw * 100));
+		  ICM20602.gyro_x = ICM20602.gyro_x_raw * 2000.f / 32768.f;
+		  ICM20602.gyro_y = ICM20602.gyro_y_raw * 2000.f / 32768.f;
+		  ICM20602.gyro_z = ICM20602.gyro_z_raw * 2000.f / 32768.f;
 	  }
   }
   /* USER CODE END 3 */

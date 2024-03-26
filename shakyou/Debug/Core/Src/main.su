@@ -2,6 +2,6 @@
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_tim.h:1609:22:LL_TIM_CC_EnableChannel	16	static
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_tim.h:1634:22:LL_TIM_CC_DisableChannel	16	static
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h:2035:22:LL_USART_EnableIT_RXNE	40	static,ignoring_inline_asm
-../Core/Src/main.c:69:5:main	32	static
-../Core/Src/main.c:165:6:SystemClock_Config	88	static
-../Core/Src/main.c:214:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:71:5:main	24	static
+../Core/Src/main.c:156:6:SystemClock_Config	88	static
+../Core/Src/main.c:205:6:Error_Handler	4	static,ignoring_inline_asm
