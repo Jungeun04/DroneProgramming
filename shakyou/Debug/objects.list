@@ -1,5 +1,6 @@
 "./Core/Src/BNO080.o"
 "./Core/Src/ICM20602.o"
+"./Core/Src/LPS22HH.o"
 "./Core/Src/Quaternion.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"

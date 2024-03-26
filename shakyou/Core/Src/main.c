@@ -29,6 +29,8 @@
 #include "quaternion.h"
 
 #include "ICM20602.h"
+
+#include "LPS22HH.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,8 +73,8 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	float q[4];
-	float quartRadianAccuracy;
+	//float q[4];
+	//float quartRadianAccuracy;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -97,6 +99,7 @@ int main(void)
   MX_USART6_UART_Init();
   MX_SPI2_Init();
   MX_SPI1_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
   LL_TIM_EnableCounter(TIM3);
   LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -116,6 +119,8 @@ int main(void)
   BNO080_enableRotationVector(2500); // 400Hz
 
   ICM20602_GPIO_SPI_Initialization();
+
+  LPS22HH_Initialization();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -137,13 +142,22 @@ int main(void)
 //
 //		  printf("%d,%d,%d\n", (int)(BNO080_Roll * 100), (int)(BNO080_Pitch * 100), (int)(BNO080_Yaw * 100));
 //	  }
-	  if(ICM20602_DataReady())
+//	  if(ICM20602_DataReady())
+//	  {
+//		  ICM20602_Get3AxisGyroRawData(&ICM20602.gyro_x_raw);
+//
+//		  ICM20602.gyro_x = ICM20602.gyro_x_raw * 2000.f / 32768.f;
+//		  ICM20602.gyro_y = ICM20602.gyro_y_raw * 2000.f / 32768.f;
+//		  ICM20602.gyro_z = ICM20602.gyro_z_raw * 2000.f / 32768.f;
+//	  }
+	  if(LPS22HH_DataReady())
 	  {
-		  ICM20602_Get3AxisGyroRawData(&ICM20602.gyro_x_raw);
+		  LPS22HH_GetPressure(&LPS22HH.pressure_raw);
+		  LPS22HH_GetTemperature(&LPS22HH.temperature_raw);
 
-		  ICM20602.gyro_x = ICM20602.gyro_x_raw * 2000.f / 32768.f;
-		  ICM20602.gyro_y = ICM20602.gyro_y_raw * 2000.f / 32768.f;
-		  ICM20602.gyro_z = ICM20602.gyro_z_raw * 2000.f / 32768.f;
+		  LPS22HH.baroAlt = getAltitude2(LPS22HH.pressure_raw/4096.f,LPS22HH.temperature_raw/100.f);
+#define X 0.90f
+		  LPS22HH.baroAltFilt = LPS22HH.baroAltFilt * X + LPS22HH.baroAlt * (1.0f - X);
 	  }
   }
   /* USER CODE END 3 */

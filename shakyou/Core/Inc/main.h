@@ -98,6 +98,14 @@ void Error_Handler(void);
 #define BNO080_RESET_GPIO_Port GPIOC
 #define BNO080_WAKE_Pin LL_GPIO_PIN_8
 #define BNO080_WAKE_GPIO_Port GPIOA
+#define SPI3_LPS22_MISO_Pin LL_GPIO_PIN_4
+#define SPI3_LPS22_MISO_GPIO_Port GPIOB
+#define SPI3_LPS22_MOSI_Pin LL_GPIO_PIN_5
+#define SPI3_LPS22_MOSI_GPIO_Port GPIOB
+#define LPS22_CS_Pin LL_GPIO_PIN_6
+#define LPS22_CS_GPIO_Port GPIOB
+#define LPS22_Interrupt_Pin LL_GPIO_PIN_7
+#define LPS22_Interrupt_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

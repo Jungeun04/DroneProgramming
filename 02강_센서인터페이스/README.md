@@ -41,6 +41,22 @@ Altitude : LPS22HH
 ## **Driver**
 - [링크](https://github.com/ChrisWonyeobPark/BNO080-STM32F4-SPI-LL-Driver)
 
+
+```C 
+if(BNO080_dataAvailable())
+{
+    q[0] = BNO080_getQuatI();
+    q[1] = BNO080_getQuatJ();
+    q[2] = BNO080_getQuatK();
+    q[3] = BNO080_getQuatReal();
+    quartRadianAccuracy = BNO080_getQuatRadianAccuracy();
+
+    Quaternion_Update(&q[0]);
+
+    printf("%d,%d,%d\n", (int)(BNO080_Roll * 100), (int)(BNO080_Pitch * 100), (int)(BNO080_Yaw * 100));
+}
+```
+
 ---
 
 # 2-2. ICM-20602 6축(자이로, 가속도) 센서 인터페이스 (SPI)
@@ -74,7 +90,20 @@ Altitude : LPS22HH
 ## **Driver**
 - [링크](https://github.com/ChrisWonyeobPark/ICM20602-STM32F4-SPI-LL-Driver)
 
+```C 
+if(ICM20602_DataReady())
+{
+    ICM20602_Get3AxisGyroRawData(&ICM20602.gyro_x_raw);
+
+    ICM20602.gyro_x = ICM20602.gyro_x_raw * 2000.f / 32768.f;
+    ICM20602.gyro_y = ICM20602.gyro_y_raw * 2000.f / 32768.f;
+    ICM20602.gyro_z = ICM20602.gyro_z_raw * 2000.f / 32768.f;
+}
+```
+
 ---
+
+# 2-3. LPS22HH 기압고도센서 인터페이스 (SPI) 
 
 ## LPS22HH
 
@@ -85,7 +114,7 @@ Altitude : LPS22HH
 - I2C, SPI, MIPI I3C 인터페이스
 
 
-### **PORT, PIN 설정**
+## **PORT, PIN 설정**
 
 **SPI3**
 - MISO: (PORTB, 4) -> SPI3_MISO
@@ -96,7 +125,7 @@ Altitude : LPS22HH
 **통신 제어**
 - INT: (PORTB, 7) - GPIO_Input
 
-### **SPI3 설정**
+## **SPI3 설정**
 - Mode: Full-Duplex Master
 - NSS Signal: Software control
 
@@ -106,8 +135,22 @@ Altitude : LPS22HH
 - Clock Phase(CPHA):Rising Edge (2 Edge)
 - First bit: MSB First
 
-### **Driver**
+## **Driver**
 - [링크](https://github.com/ChrisWonyeobPark/LPS22HH-STM32F4-SPI-LL-Driver)  
+
+```C 
+
+if(LPS22HH_DataReady())
+{
+    LPS22HH_GetPressure(&LPS22HH.pressure_raw);
+    LPS22HH_GetTemperature(&LPS22HH.temperature_raw);
+
+    LPS22HH.baroAlt = getAltitude2(LPS22HH.pressure_raw/4096.f,LPS22HH.temperature_raw/100.f);
+#define X 0.90f
+    LPS22HH.baroAltFilt = LPS22HH.baroAltFilt * X + LPS22HH.baroAlt * (1.0f - X);
+}
+
+```
 
 ### IIR(Infinity Impulse Response)
 - 결과가 input에 의해서만 관계식이 나타내어 지는 것이 아니라 이전의 결과도 영향을 주는 방정식
